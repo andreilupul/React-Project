@@ -12,23 +12,56 @@ function Register() {
     const [birthdate, setBirthdate] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    // Error Mesage.
     const [isReg, setIsReg] = useState(false);
+
+
+    const [errorFirstName, setErrorFirstName] = useState("");
+    const [errorLastName, setErrorLastName] = useState("");
+    const [errorBirthdate, setErrorBirthdate] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [errorPassword, setErrorPassword] = useState("");
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
     async function handleClick() {
-        setErrorMessage(""); // Reset error message
+        setErrorMessage(""); // Reset error message.
         if (!isReg) {
             setIsReg(true);
 
-            // Basic email validation
+ // Basic email validation.
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
+ //Errors Validation.
+            if(!firstName.trim()){
+                setErrorFirstName("First Name is required")
+                setIsReg(false);
+            }else(setErrorFirstName(""))
+
+            if(!lastName.trim()){
+                setErrorLastName("Last Name is required")
+                setIsReg(false);  
+            }else(setErrorLastName(""))
+
+            if(!birthdate.trim()){
+                setErrorBirthdate("Birthdate is required")
+                setIsReg(false);  
+            }else(setErrorBirthdate(""))
+
+            if(!email.trim()){
+                setErrorMessage("Email is required")
+            }else if (!emailRegex.test(email)) {
                 setErrorMessage("Invalid email format");
                 setIsReg(false);
+            }else(setErrorMessage(""))
+
+            if(!password.trim()){
+                setErrorPassword("Password is required")
+                setIsReg(false);
                 return;
-            }
+            }else if (password.length < 6) {
+                setErrorPassword("Password should be at least 6 characters");
+                setIsReg(false)
+            }else(setErrorPassword(""))
 
             await doCreateUserWithEmailAndPassword(email, password)
                 .then(async (user) => {
@@ -49,8 +82,7 @@ function Register() {
                     setErrorMessage(error.message);
                     setIsReg(false);
                 });
-        }
-    }
+        }}//End of Validation Function.
 
     useEffect(() => {
         if (currentUser) {
@@ -58,8 +90,8 @@ function Register() {
         }
     }, [currentUser, navigate]);
 
+//HTML and JS
     return (
-
 
         <Box sx={{ maxWidth: 300, margin: 'auto', border: '2px solid black', padding: 3 }}>
             <Typography variant="h4" component="h4" gutterBottom>
@@ -73,6 +105,12 @@ function Register() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 sx={{ marginBottom: 2, width: '250px' }}
+                error={Boolean(errorFirstName)}
+                helperText={errorFirstName}
+
+
+
+
             />
             <TextField
                 required
@@ -81,6 +119,9 @@ function Register() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 sx={{ marginBottom: 2, width: '250px' }}
+                error={Boolean(errorLastName)}
+                helperText={errorLastName}
+                
             />
             <TextField
                 required
@@ -91,6 +132,8 @@ function Register() {
                 value={birthdate}
                 onChange={(e) => setBirthdate(e.target.value)}
                 sx={{ marginBottom: 2, width: '250px' }}
+                error={Boolean(errorBirthdate)}
+                helperText={errorBirthdate}
             />
             <TextField
                 required
@@ -110,6 +153,8 @@ function Register() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 sx={{ marginBottom: 2, width: '250px' }}
+                error={Boolean(errorPassword)}
+                helperText={errorPassword}
             />
             <Button
                 variant="contained"
@@ -127,3 +172,8 @@ function Register() {
 }
 
 export default Register;
+
+
+
+//Notite:
+//Am facut validarile dar nu am reusit sa vad de unde vine validarea pe password de la Firebase.

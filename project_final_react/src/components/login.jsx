@@ -10,16 +10,24 @@ function Login() {
     const { userLoggedIn } = useAuth();
     const navigate = useNavigate();
 
+
+
     const handleLogin = async () => {
         try {
             await doSignInWithEmailAndPassword(email, password);
             navigate('/');
         } catch (error) {
+// Sunt bagate de mine pentru a face o erroare la login daca userul isi pune emailul sau password gresit .
+           
+// Aici se termina ce incer eu sa fac.
             console.error("Login failed:", error);
         }
     };
 
-    //    
+
+
+
+
 
     return (
         <Box
